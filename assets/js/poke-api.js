@@ -1,30 +1,3 @@
-class Pokemon {
-    constructor() {
-        this.number = null;
-        this.name = null;
-        this.type = null;
-        this.types = [];
-        this.photo = null;
-    }
-}
-
-const pokeapi = {
-    getPokemonDetail: (pokemon) => {
-        return fetch(pokemon.url)
-            .then((response) => response.json())
-            .then(convertPokeApiDetailToPokemon);
-    },
-
-    getPokemons: (offset = 0, limit = 50) => {
-        const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
-        return fetch(url)
-            .then((response) => response.json())
-            .then((jsonBody) => jsonBody.results)
-            .then((pokemons) => pokemons.map(pokeapi.getPokemonDetail))
-            .then((detailRequests) => Promise.all(detailRequests));
-    }
-};
-
 function convertPokeApiDetailToPokemon(pokeDetail) {
     const pokemon = new Pokemon();
     pokemon.number = pokeDetail.id;
@@ -39,3 +12,20 @@ function convertPokeApiDetailToPokemon(pokeDetail) {
 
     return pokemon;
 }
+
+const pokeapi = {
+    getPokemonDetail: (pokemon) => {
+        return fetch(pokemon.url)
+            .then((response) => response.json())
+            .then(convertPokeApiDetailToPokemon);
+    },
+
+    getPokemons: (offset = 0, limit = 15) => {
+        const url = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`;
+        return fetch(url)
+            .then((response) => response.json())
+            .then((jsonBody) => jsonBody.results)
+            .then((pokemons) => pokemons.map(pokeapi.getPokemonDetail))
+            .then((detailRequests) => Promise.all(detailRequests));
+    }
+};

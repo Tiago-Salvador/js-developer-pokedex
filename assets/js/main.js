@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pokemonList = document.getElementById('pokemonList');
     const loadMoreButton = document.getElementById('loadMoreButton');
     let offset = 0;
-    const limit = 10;
+    const limit = 50;
 
     function loadPokemons(offset, limit) {
         pokeapi.getPokemons(offset, limit).then((pokemons = []) => {
