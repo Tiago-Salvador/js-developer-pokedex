@@ -1,48 +1,31 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const pokemonList = document.getElementById('pokemonList');
+    const loadMoreButton = document.getElementById('loadMoreButton');
+    let offset = 0;
+    const limit = 10;
 
-const pokemonList = document.getElementById('pokemonList')
-const loadMoreButton = document.getElementById('loadMoreButton')
-const maxRecords = 151
-const limit = 25
-let offset = 0
-
-function loadPokemonItens(offset, limit){
-    
-    pokeapi.getPokemons(offset, limit).then((pokemons = []) => {
-        const newHtml = pokemons.map((pokemon) => 
-            `
-                <li class="pokemon ${pokemon.type}">  
-                    <span class="number">#${pokemon.number}</span>
+    function loadPokemons(offset, limit) {
+        pokeapi.getPokemons(offset, limit).then((pokemons = []) => {
+            const newHtml = pokemons.map((pokemon) => `
+                <li class="pokemon ${pokemon.type}">
+                    <span class="number">#${pokemon.number.toString().padStart(3, '0')}</span>
                     <span class="name">${pokemon.name}</span>
-
-                    <!-- detail -->
                     <div class="detail">
                         <ol class="types">
                             ${pokemon.types.map((type) => `<li class="type ${type}">${type}</li>`).join('')}
                         </ol>
                         <img src="${pokemon.photo}" alt="${pokemon.name}">
                     </div>
-                </li>`
-        ).join('')
-
-        pokemonList.innerHTML += newHtml
-    })
-
-}
-
-loadPokemonItens(offset, limit)
-loadMoreButton.addEventListener('click', () => {
-    offset += limit
-
-    const qtdRecordNextPage = offset + limit
-
-if(qtdRecordNextPage >= maxRecords) {
-    const newLimit = maxRecords - offset
-    loadPokemonItens(offset, newLimit)
-    
-    loadMoreButton.parentElement.removeChild(loadMoreButton)
-} else {
-    
-    loadPokemonItens(offset, limit)
-    
+                </li>
+            `).join('');
+            pokemonList.innerHTML += newHtml;
+        });
     }
-})
+
+    loadMoreButton.addEventListener('click', () => {
+        offset += limit;
+        loadPokemons(offset, limit);
+    });
+
+    loadPokemons(offset, limit);
+});
